@@ -13,7 +13,7 @@ const permissions = shield({
     currentUser: isAuthenticated,
   },
   Mutation: {
-    addBook: isAuthenticated,
+    //addBook: isAuthenticated,
   },
 }, { allowExternalErrors: true });
 
