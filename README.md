@@ -1,31 +1,10 @@
-## 01 - Apollo Server Setup
+# My project
 
+## First steps
 
-## 02 - Prisma Setup
-- [Prisma SDL first example](https://github.com/prisma/prisma-examples/blob/master/javascript/graphql-sdl-first)
-- [Adding Prisma to existing project](https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project-node-postgres)
+- Install dependencies using `yarn` or `npm i`
+- Launch the backend with `yarn dev`
+- If you change any model, run the migrations with `yarn migrate:save` and `yarn migrate:up`
+- Apply the new migrations to the prisma client with `yarn generate`
+- Prisma has an IDE for the database. Launch it with `yarn studio`
 
-
-## 03 - Authentication
-- [Documentation](https://www.prisma.io/tutorials/authentication-in-apollo-server-ct21)
-
-## Authorization
-- [GraphQL Shield](https://medium.com/@maticzav/graphql-shield-9d1e02520e35)
-- [Repo](https://github.com/maticzav/graphql-shield)
-
-## Custom scalars and enums
-- [Documentation](https://www.apollographql.com/docs/apollo-server/schema/scalars-enums/)
-
-
-## Error handling
-- [Documentation](https://www.apollographql.com/docs/apollo-server/data/errors/)
-- [Better approach](https://dev.to/andre/handling-errors-in-graphql--2ea3)
-- [Apollo errors package](https://github.com/boltsource/apollo-errors)
-
-
-## File uploads
-- [Documentation](https://www.apollographql.com/docs/apollo-server/data/file-uploads/)
-
-
-## Fetch data from APIS
-- [Documentation](https://www.apollographql.com/docs/apollo-server/data/data-sources/)
