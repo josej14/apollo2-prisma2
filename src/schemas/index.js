@@ -1,10 +1,10 @@
 import { mergeSchemas } from 'graphql-tools';
 
-//import bookSchema from './book';
+import alumnSchema from './alumn';
 import userSchema from './user'
 
 const schema = mergeSchemas({
-  schemas: [userSchema],
+  schemas: [userSchema, alumnSchema],
 })
 
 export default schema;
