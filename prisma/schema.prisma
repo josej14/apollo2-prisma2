@@ -24,8 +24,8 @@ model Seminar {
   description   String?
 
   votes         Vote[]
-  alumn         Int       @unique
-  Alumn         Alumn     @relation(fields: [alumn], references: [id])
+  alumnId       Int
+  alumn         Alumn     @relation(fields: [alumnId], references: [id])
 }
 
 model Vote {
