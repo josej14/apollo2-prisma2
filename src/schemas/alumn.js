@@ -7,16 +7,17 @@ const typeDefs = gql`
     name: String!
     surname: String!
     email: String!
+    seminar: Seminar
   }
 
-  type Query {
+  extend type Query {
     alumns(take:Int, skip:Int): [Alumn]!
     alumnById(id: Int!): Alumn
     alumnByEmail(email: String!): Alumn
   }
 
-  type Mutation {
-    addAlumn(name: String!, surname: String!, email: String!): Alumn!
+  extend type Mutation {
+    addAlumn(name: String!, surname: String!, email: String!, seminar: Int): Alumn!
   }
 `;
 
@@ -32,12 +33,18 @@ const resolvers = {
         name: args.name,
         surname: args.surname,
         email: args.email,
+        seminar: args.seminar,
       },
     }),
   }
 };
 
-export default makeExecutableSchema({
-  typeDefs,
+/* export default makeExecutableSchema({
+  typeDefs: [typeDefs, seminarTypes],
   resolvers
-});
+}); */
+
+export { 
+  typeDefs as alumnTypes,
+  resolvers as alumnResolvers,
+};

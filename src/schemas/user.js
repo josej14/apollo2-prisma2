@@ -16,11 +16,11 @@ const typeDefs = gql`
     user: User
   }
 
-  type Query {
+  extend type Query {
     currentUser: User!
   }
 
-  type Mutation {
+  extend type Mutation {
     register(username: String!, password: String!): User!
     login(username: String!, password: String!): LoginResponse!
   }
@@ -62,7 +62,12 @@ const resolvers = {
   }
 };
 
-export default makeExecutableSchema({
+/* export default makeExecutableSchema({
   typeDefs,
   resolvers
-});
+}); */
+
+export { 
+  typeDefs as userTypes,
+  resolvers as userResolvers,
+};
