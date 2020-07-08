@@ -15,7 +15,7 @@ model Alumn {
   name        String
   surname     String
   email       String    @unique
-  Seminar     Seminar?
+  seminar     Seminar?
 }
 
 model Seminar {
