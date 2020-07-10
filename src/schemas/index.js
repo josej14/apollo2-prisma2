@@ -4,6 +4,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 import merge from 'lodash/merge';
 import { alumnTypes, alumnResolvers } from './alumn';
 import { userTypes, userResolvers } from './user'
+import { voteTypes, voteResolvers } from './vote'
 
 /*const schema = mergeSchemas({
   schemas: [userSchema, alumnSchema, seminarSchema],
@@ -18,6 +19,7 @@ const typeDefs = gql`
     }
     ${alumnTypes}
     ${userTypes}
+    ${voteTypes}
 `;
 
 const schema = makeExecutableSchema({
@@ -25,6 +27,7 @@ const schema = makeExecutableSchema({
   resolvers: merge(
     alumnResolvers,
     userResolvers,
+    voteResolvers,
   ),
 })
 

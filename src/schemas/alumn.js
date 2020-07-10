@@ -1,5 +1,4 @@
 import { gql } from 'apollo-server'
-import { makeExecutableSchema } from 'graphql-tools';
 
 const typeDefs = gql`
   type Alumn {
