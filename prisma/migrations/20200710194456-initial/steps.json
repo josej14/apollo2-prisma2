@@ -294,7 +294,14 @@
     {
       "tag": "CreateField",
       "model": "Vote",
-      "field": "seminar",
+      "field": "seminarId",
+      "type": "Int",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Vote",
+      "field": "userId",
       "type": "Int",
       "arity": "Required"
     },
@@ -302,13 +309,6 @@
       "tag": "CreateField",
       "model": "Vote",
       "field": "user",
-      "type": "Int",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Vote",
-      "field": "User",
       "type": "User",
       "arity": "Required"
     },
@@ -318,7 +318,7 @@
         "path": {
           "tag": "Field",
           "model": "Vote",
-          "field": "User"
+          "field": "user"
         },
         "directive": "relation"
       }
@@ -330,12 +330,12 @@
         "path": {
           "tag": "Field",
           "model": "Vote",
-          "field": "User"
+          "field": "user"
         },
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[user]"
+      "value": "[userId]"
     },
     {
       "tag": "CreateArgument",
@@ -344,7 +344,7 @@
         "path": {
           "tag": "Field",
           "model": "Vote",
-          "field": "User"
+          "field": "user"
         },
         "directive": "relation"
       },
@@ -354,7 +354,7 @@
     {
       "tag": "CreateField",
       "model": "Vote",
-      "field": "Seminar",
+      "field": "seminar",
       "type": "Seminar",
       "arity": "Required"
     },
@@ -364,7 +364,7 @@
         "path": {
           "tag": "Field",
           "model": "Vote",
-          "field": "Seminar"
+          "field": "seminar"
         },
         "directive": "relation"
       }
@@ -376,12 +376,12 @@
         "path": {
           "tag": "Field",
           "model": "Vote",
-          "field": "Seminar"
+          "field": "seminar"
         },
         "directive": "relation"
       },
       "argument": "fields",
-      "value": "[seminar]"
+      "value": "[seminarId]"
     },
     {
       "tag": "CreateArgument",
@@ -390,7 +390,7 @@
         "path": {
           "tag": "Field",
           "model": "Vote",
-          "field": "Seminar"
+          "field": "seminar"
         },
         "directive": "relation"
       },

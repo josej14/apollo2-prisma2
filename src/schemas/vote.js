@@ -21,6 +21,17 @@ const typeDefs = gql`
 `;
 
 
+function normalizeVotationInt(value) {
+  if (value < 0) {
+    return 0
+  }
+  if (value > 10) {
+    return 10
+  }
+
+  return value
+}
+
 const include = {
   seminar: true,
   user: true,
@@ -28,12 +39,27 @@ const include = {
 const resolvers = {
   Query: {
     votes: (parent, { take, skip }, { prisma }) => prisma.vote.findMany({ skip, take, include }),
-    votesByUserId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { seminar: id }, include }),
-    votesBySeminarId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { user: id }, include }),
+    votesByUserId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { seminarId: id }, include }),
+    votesBySeminarId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { userId: id }, include }),
   },
   Mutation: {
-    voteFor: async (parent, { seminar, quality, utility }, { prisma }) => {
+    voteFor: async (parent, { seminar, quality, utility }, { prisma, user }) => {
       // obtener userId de contexto
+      const {id : userId} = user
+
+      const _quality = normalizeVotationInt(quality)
+      const _utility = normalizeVotationInt(utility)
+
+      const count = await prisma.vote.count({ where: { userId, seminarId: seminar }})
+      
+      if (count > 0) {
+        // return updated vote
+      }
+
+      // return new vote
+
+
+      console.log(count)
 
       // quality y utility entre 0 y 10
       // create or update de vote

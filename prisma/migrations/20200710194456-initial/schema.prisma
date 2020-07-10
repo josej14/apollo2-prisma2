@@ -29,9 +29,9 @@ model Seminar {
 }
 
 model Vote {
-  id        Int     @id @default(autoincrement())
-  quality   Int
-  utility   Int
+  id          Int     @id @default(autoincrement())
+  quality     Int
+  utility     Int
   seminarId   Int     //@unique
   userId      Int     //@unique
 
