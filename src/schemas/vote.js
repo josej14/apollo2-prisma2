@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server'
+import meanBy from 'lodash/meanBy';
 import { VoteTwiceError } from '../errors';
 import pubsub from '../pubsub';
 
@@ -9,6 +10,13 @@ const typeDefs = gql`
     utility: Int!
     seminar: Seminar
     user: User
+  }
+
+  type SeminarStats {
+    quality: Int!
+    utility: Int!
+    seminar: Seminar!
+    total: Int!
   }
 
   extend type Query {
@@ -23,9 +31,22 @@ const typeDefs = gql`
 
   extend type Subscription {
     voteAdded: Vote
+    seminarStats: SeminarStats
   }
 `;
 
+
+async function seminarStats({ prisma, seminarId }) {
+  const votes = await prisma.vote.findMany({ where: {seminarId} });
+  const seminar = await prisma.seminar.findOne({ where: {id: seminarId} });
+
+  return {
+    quality: meanBy(votes, 'quality'),
+    utility: meanBy(votes, 'utility'),
+    seminar,
+    total: votes.length
+  };
+}
 
 function normalizeVotationInt(value) {
   if (value < 0) {
@@ -64,9 +85,8 @@ const resolvers = {
         include
       })
 
-      pubsub.publish("voteAdded", {
-        voteAdded: vote
-      });
+      pubsub.publish("voteAdded", { voteAdded: vote });
+      pubsub.publish("seminarStats", { seminarStats: seminarStats({ prisma, seminarId }) });
 
       return vote
     },
@@ -75,6 +95,9 @@ const resolvers = {
   Subscription: {
     voteAdded: {
       subscribe: () => pubsub.asyncIterator(["voteAdded"])
+    },
+    seminarStats: {
+      subscribe: () => pubsub.asyncIterator(["seminarStats"])
     }
   }
 };
