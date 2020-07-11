@@ -43,29 +43,26 @@ const resolvers = {
     votesBySeminarId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { userId: id }, include }),
   },
   Mutation: {
-    voteFor: async (parent, { seminar, quality, utility }, { prisma, user }) => {
+    voteFor: async (parent, { seminar: seminarId, quality:q, utility:u }, { prisma, user }) => {
       // obtener userId de contexto
-      const {id : userId} = user
+      const {id: userId} = user
 
-      const _quality = normalizeVotationInt(quality)
-      const _utility = normalizeVotationInt(utility)
+      const quality = normalizeVotationInt(q)
+      const utility = normalizeVotationInt(u)
 
-      const count = await prisma.vote.count({ where: { userId, seminarId: seminar }})
-      
-      if (count > 0) {
-        // return updated vote
-      }
+      const v = await prisma.vote.findOne({
+        where: { userId, seminarId }
+      })
 
-      // return new vote
+      console.log(v)
+      console.log('ie')
 
-
-      console.log(count)
-
-      // quality y utility entre 0 y 10
-      // create or update de vote
-
-      // return vote
-
+      return prisma.vote.upsert({
+        where: { userId, seminarId },
+        update: { quality, utility },
+        create: { quality, utility, seminarId, userId },
+        include,
+      })
     },
   }
 };
