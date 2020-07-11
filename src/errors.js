@@ -7,6 +7,14 @@ class WrongCredentialsError extends ApolloError {
     }
 }
 
+class VoteTwiceError extends ApolloError {
+  constructor(message) {
+      super(message || "A user cannot vote twice for the same seminar", "VOTE_TWICE");
+      Object.defineProperty(this, "name", {value: 'VoteTwiceError'});
+  }
+}
+
 export {
   WrongCredentialsError,
+  VoteTwiceError,
 }

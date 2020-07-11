@@ -1,9 +1,8 @@
 import { gql } from 'apollo-server'
-import { makeExecutableSchema } from 'graphql-tools';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
-import { WrongCredentialsError, AuthenticationError } from '../errors';
+import { WrongCredentialsError } from '../errors';
 
 const typeDefs = gql`
   type User {

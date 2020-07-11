@@ -6,10 +6,6 @@ import { alumnTypes, alumnResolvers } from './alumn';
 import { userTypes, userResolvers } from './user'
 import { voteTypes, voteResolvers } from './vote'
 
-/*const schema = mergeSchemas({
-  schemas: [userSchema, alumnSchema, seminarSchema],
-})*/
-
 const typeDefs = gql`
     type Query{
         _empty: String

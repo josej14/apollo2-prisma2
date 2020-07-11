@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server'
+import { VoteTwiceError } from '../errors';
 
 const typeDefs = gql`
   type Vote {
@@ -50,18 +51,17 @@ const resolvers = {
       const quality = normalizeVotationInt(q)
       const utility = normalizeVotationInt(u)
 
-      const v = await prisma.vote.findOne({
+      const count = await prisma.vote.count({
         where: { userId, seminarId }
       })
 
-      console.log(v)
-      console.log('ie')
+      if (count > 0) {
+        throw new VoteTwiceError()
+      }
 
-      return prisma.vote.upsert({
-        where: { userId, seminarId },
-        update: { quality, utility },
-        create: { quality, utility, seminarId, userId },
-        include,
+      return prisma.vote.create({
+        data: { quality, utility, seminar: { connect: { id: seminarId }}, user: { connect: { id: userId }} },
+        include
       })
     },
   }
