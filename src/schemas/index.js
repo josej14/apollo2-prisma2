@@ -13,6 +13,10 @@ const typeDefs = gql`
     type Mutation {
         _empty: String
     }
+    type Subscription {
+        _empty: String
+    }
+
     ${alumnTypes}
     ${userTypes}
     ${voteTypes}

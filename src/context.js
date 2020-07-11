@@ -16,9 +16,9 @@ const getUserFromJWT = (bearer='') => {
 
 const prisma = new PrismaClient()
 
-const createContext = ({ req }) => {
-  const user = getUserFromJWT(req.headers.authorization);
-  return { user, prisma };
+const createContext = ({ req, connection }) => {
+  const { authorization } = req ? req.headers : connection.context
+  return { user: getUserFromJWT(authorization), prisma };
 }
 
 export default createContext;

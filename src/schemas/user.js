@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server'
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
+import pubsub from '../pubsub';
 
 import { WrongCredentialsError } from '../errors';
 
@@ -23,6 +24,11 @@ const typeDefs = gql`
     register(username: String!, password: String!): User!
     login(username: String!, password: String!): LoginResponse!
   }
+
+  extend type Subscription {
+    userRegistered: User
+    userLogin: User
+  }
 `;
 
 const resolvers = {
@@ -35,7 +41,11 @@ const resolvers = {
     register: async (parent, { username, password }, { prisma }) => {
       const hashedPassword = await argon2.hash(password);
       const data = { username, password: hashedPassword };
-      return prisma.user.create({ data });
+
+      const userRegistered = await prisma.user.create({ data });
+      pubsub.publish("userRegistered", { userRegistered });
+      
+      return userRegistered;
     },
     login: async (parent, { username, password }, { prisma }) => {
       const user = await prisma.user.findOne({ where: { username } });
@@ -43,6 +53,8 @@ const resolvers = {
 
       const passwordMatch = await argon2.verify(user.password, password);
       if (!passwordMatch) throw new WrongCredentialsError();
+
+      pubsub.publish("userLogin", { userLogin: user });
 
       const token = jwt.sign(
         {
@@ -58,13 +70,16 @@ const resolvers = {
       return { token, user };
 
     },
+  },
+  Subscription: {
+    userLogin: {
+      subscribe: () => pubsub.asyncIterator(["userLogin"])
+    },
+    userRegistered: {
+      subscribe: () => pubsub.asyncIterator(["userRegistered"])
+    }
   }
 };
-
-/* export default makeExecutableSchema({
-  typeDefs,
-  resolvers
-}); */
 
 export { 
   typeDefs as userTypes,

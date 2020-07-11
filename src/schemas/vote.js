@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server'
 import { VoteTwiceError } from '../errors';
+import pubsub from '../pubsub';
 
 const typeDefs = gql`
   type Vote {
@@ -18,6 +19,10 @@ const typeDefs = gql`
 
   extend type Mutation {
     voteFor(seminar: Int!, quality: Int!, utility: Int!): Vote!
+  }
+
+  extend type Subscription {
+    voteAdded: Vote
   }
 `;
 
@@ -43,27 +48,34 @@ const resolvers = {
     votesByUserId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { seminarId: id }, include }),
     votesBySeminarId: (parent, { id }, { prisma }) => prisma.vote.findMany({ where: { userId: id }, include }),
   },
+  
   Mutation: {
     voteFor: async (parent, { seminar: seminarId, quality:q, utility:u }, { prisma, user }) => {
-      // obtener userId de contexto
       const {id: userId} = user
-
       const quality = normalizeVotationInt(q)
       const utility = normalizeVotationInt(u)
 
-      const count = await prisma.vote.count({
-        where: { userId, seminarId }
-      })
+      const count = await prisma.vote.count({ where: {userId, seminarId} })
 
-      if (count > 0) {
-        throw new VoteTwiceError()
-      }
+      if (count > 0) throw new VoteTwiceError()
 
-      return prisma.vote.create({
+      const vote = await prisma.vote.create({
         data: { quality, utility, seminar: { connect: { id: seminarId }}, user: { connect: { id: userId }} },
         include
       })
+
+      pubsub.publish("voteAdded", {
+        voteAdded: vote
+      });
+
+      return vote
     },
+  },
+
+  Subscription: {
+    voteAdded: {
+      subscribe: () => pubsub.asyncIterator(["voteAdded"])
+    }
   }
 };
 

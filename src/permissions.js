@@ -11,10 +11,19 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 const permissions = shield({
   Query: {
     currentUser: isAuthenticated,
+    alumns: isAuthenticated,
+    alumnById: isAuthenticated,
+    alumnByEmail: isAuthenticated,
+    votes: isAuthenticated,
+    votesByUserId: isAuthenticated,
+    votesBySeminarId: isAuthenticated,
   },
   Mutation: {
     voteFor: isAuthenticated,
   },
+  Subscription: {
+    voteAdded: isAuthenticated,
+  }
 }, { allowExternalErrors: true });
 
 export default permissions;
