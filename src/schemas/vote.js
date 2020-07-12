@@ -13,8 +13,8 @@ const typeDefs = gql`
   }
 
   type SeminarStats {
-    quality: Int!
-    utility: Int!
+    quality: Float!
+    utility: Float!
     seminar: Seminar!
     total: Int!
   }
